@@ -38,18 +38,7 @@ use Illuminate\Support\Facades\Notification;
 });
 
 
-  Route::get('/k', function() {
 
-
-      $recipient = auth()->user();
-
-  $recipient->notify(
-          Notification::make()
-              ->title('Saved successfull')
-              ->toBroadcast(),
-      );
-
-});
 
 
     Route::get('/clear-route', function() {
