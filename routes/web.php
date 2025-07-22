@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Notification;
 
   $recipient->notify(
           Notification::make()
-              ->title('Saved successfully')
+              ->title('Saved successfull')
               ->toBroadcast(),
       );
 
