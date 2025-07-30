@@ -30,6 +30,7 @@ class Checklist extends Model
 
     public function details()
     {
-        return $this->hasMany(ChecklistDetail::class, 'cert_id', 'cert_id');
+        return $this->hasMany(ChecklistDetail::class, 'cert_id', 'cert_id')
+            ->orderBy('checklist_item_id');
     }
 }

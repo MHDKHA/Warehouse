@@ -20,4 +20,11 @@ class ChecklistDetail extends Model
     {
         return $this->belongsTo(Main::class, 'cert_id', 'certification_id');
     }
+
+    public function checklistDetails()
+    {
+        return $this->belongsTo(\App\Models\ChecklistDetail::class,'checklist_item_id','item_id');
+    }
+
+
 }

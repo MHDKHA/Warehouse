@@ -6,10 +6,13 @@ use App\ChecklistRepeater;
 use App\Models\CrownBlock\Main as CrownBlock;
 use App\Models\CrownBlock\Checklist;
 use App\Models\CrownBlock\ChecklistDetail;
+use App\Models\CrownBlock\Photo;
 use App\Models\CrownBlock\ReadingCL;
 use App\Models\CrownBlock\ReadingFL;
 use App\Models\CrownBlock\ReadingSL;
+use App\Models\StockOut;
 use App\Models\WorkOrder;
+use App\Services\CrownBlockCertificateService;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Hidden;
@@ -19,6 +22,8 @@ use Filament\Resources\Resource;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -162,15 +167,74 @@ class MainResource extends Resource
                 // Filters here
             ])
             ->actions([
+                Tables\Actions\Action::make('photos')
+                    ->label('Photos')
+                    ->icon('heroicon-o-photo')
+                    ->color(fn ($record) => Photo::where('certification_id', $record->certification_id)->exists() ? 'success' : 'gray')
+                    ->url(fn ($record) => MainResource::getUrl('photos', ['record' => $record]))
+                    ->openUrlInNewTab(),
                 Tables\Actions\Action::make('Readings')
                     ->label('Readings')
                     ->color(fn ($record) => \App\Models\CrownBlock\ReadingCL::where('certification_id', $record->certification_id)->exists() ? 'success' : 'gray')
                     ->icon('heroicon-o-clipboard-document')
                     ->url(fn ($record) => MainResource::getUrl('readings', ['record' => $record]))
                     ->openUrlInNewTab(),
+                ActionGroup::make([
+                    Action::make('Download Approved')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->action(function (CrownBlock $record, CrownBlockCertificateService $certificateService) {
+                            $pdfData = $certificateService->generatePdf($record, false);
+                            $fileName = "CERT-{$record->id}-APPROVED.pdf";
 
+                            return response()->streamDownload(
+                                fn() => print($pdfData),
+                                $fileName
+                            );
+                        }),
+
+                    Action::make('Download Draft')
+                        ->icon('heroicon-o-document-text')
+                        ->color('gray')
+                        ->action(function (CrownBlock $record, CrownBlockCertificateService $certificateService) {
+                            $pdfData = $certificateService->generatePdf($record, true);
+                            $fileName = "CERT-{$record->id}-DRAFT.pdf";
+
+                            return response()->streamDownload(
+                                fn() => print($pdfData),
+                                $fileName
+                            );
+                        }),
+                ])->label('Download PDF')->icon('heroicon-o-arrow-down-tray')->color('info'),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+
+
+
+                Action::make('approve_supervisor')
+                    ->label(__('Approve'))
+                    ->icon('heroicon-o-check-circle')
+                    ->iconSize('lg')
+                    ->action(function (CrownBlock $record) {
+
+                        $record->update([
+                            'approved' => '1',
+                            'approved_by' => auth()->id(),
+                            'approved_date' => now(),
+                        ]);
+                    })
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Approve Request as Supervisor'))
+                    ->modalSubheading(function ($record) {
+                        return __('Are you sure you want to approve this Request :request_number? This action cannot be undone.', [
+                            'request_number' => '#'.$record->certification_id // Replace with your actual request number field
+                        ]);
+                    })
+                    ->modalButton(__('Approve'))
+                    ->color('success')
+                    ->visible(fn ($record) => auth()->user()->hasAnyRole('Drilling_approval', 'admin')  && !$record->approved),
+
+
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -184,6 +248,9 @@ class MainResource extends Resource
             'create' => MainResource\Pages\CreateMain::route('/create/{wo_id?}'),
             'edit' => MainResource\Pages\EditMain::route('/{record}/edit'),
             'readings' => MainResource\Pages\ManageReadings::route('/{record}/readings'),
+            'photos' => \App\Filament\Resources\CrownBlock\MainResource\Pages\ManagePhotos::route('/{record}/photos'),
+
+
         ];
     }
 

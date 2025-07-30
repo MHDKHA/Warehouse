@@ -6,7 +6,6 @@ use App\Filament\Resources\CrownBlock\MainResource as CrownBlockResource;
 use App\Models\CrownBlock\ReadingCL;
 use App\Models\CrownBlock\ReadingFL;
 use App\Models\CrownBlock\Main;
-use App\Models\CrownBlock\ReadingSL;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
@@ -43,7 +42,7 @@ class ManageReadings extends Page implements HasForms
     public function mount(): void
     {
         // Load the main record from the URL and its relationships
-        $this->record->load(['clusterReadings', 'fastLineReading', 'sandLineReading']);
+        $this->record->load(['clusterReadings', 'fastLineReading']);
 
         // Set values needed for validation, taken from the main certificate record
         $drill_line_dia = (float)$this->record->drill_line_dia;
@@ -136,25 +135,7 @@ class ManageReadings extends Page implements HasForms
                         ])
                     ]),
 
-                Section::make('Sand Line Sheave Reading')
-                    ->schema([
-                        Grid::make(7)->schema([
-                            TextInput::make('sandLineReading.sl_nominal_wire')
-                                ->label('Nominal Wire Diameter')
-                                ->numeric()->required()->live(onBlur: true) // Update when user leaves the field
-                                ->columnSpan(2),
 
-                            // These fields are reactive to sl_nominal_wire
-                            ...$this->createGrooveFields(
-                                min: 0, // Will be calculated dynamically
-                                max: 0, // Will be calculated dynamically
-                                passFailPath: 'sandLineReading.pass_fail',
-                                basePath: 'sandLineReading',
-                                nominalPath: 'sandLineReading.sl_nominal_wire' // Path to nominal value for calculation
-                            )
-                        ]),
-                    ])
-                    ->visible(fn() => !empty($this->record->sand_line_sheave_sn)), // Show only if SN exists
             ])
             ->statePath('data');
     }

@@ -9,6 +9,7 @@
         "awcodes/filament-versions": "^2.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-shield": "^3.3",
+        "blade-ui-kit/blade-heroicons": "^2.6",
         "carlos-meneses/laravel-mpdf": "^2.1",
         "eightynine/filament-excel-import": "^3.1",
         "filament/actions": "^3.2",

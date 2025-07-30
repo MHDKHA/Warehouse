@@ -3,6 +3,7 @@
 namespace App\Models\CrownBlock;
 
 
+use App\Models\UserDetails;
 use App\Models\WorkOrder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -77,14 +78,24 @@ class Main extends Model
         'rev_no',
     ];
 
+    public function inspector()
+    {
+        return $this->belongsTo(UserDetails::class, 'inspector_id');
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(UserDetails::class, 'approved_by');
+    }
+
     public function photos()
     {
         return $this->hasMany(Photo::class, 'certification_id', 'certification_id');
     }
-//    public function workOrder()
-//    {
-//        return $this->hasMany(WorkOrder::class, 'wo_id', 'wo_id');
-//    }
+    public function workOrder()
+    {
+        return $this->hasMany(WorkOrder::class, 'wo_id', 'wo_id');
+    }
 
     public function fastLineReading()
     {
@@ -96,10 +107,7 @@ class Main extends Model
         return $this->hasMany(ReadingCL::class, 'certification_id', 'certification_id');
     }
 
-    public function sandLineReading()
-    {
-        return $this->hasOne(ReadingSL::class, 'certification_id', 'certification_id');
-    }
+
 
     public function checklist()
     {
