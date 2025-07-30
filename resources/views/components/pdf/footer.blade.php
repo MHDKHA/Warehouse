@@ -18,12 +18,20 @@
     </tr>
     </tbody>
 </table>
-<div style="background-color:#ca182c; color:#fff; font-size:9px; font-weight:bold; padding: 4px; text-align: center; margin-top: 5px;">
-    Testing Equipment Specialist Team Company | P.O Box 4022, Dammam 34264, Saudi Arabia...
+<div class="footer-bar">
+
+    Testing Equipment Specialist Team Company | P.O Box 4022, Dammam 34264, Saudi Arabia | +966 13 808 4277 | sales@testcosa.com | www.testcosa.com
+
 </div>
+
 <table width="100%">
+
     <tr>
+
         <td width="50%">TEST-QMS-P85I-NDT-002 Rev.{{ $record->rev_no ?? 0 }}</td>
-        <td width="50%" style="text-align: right;">Page {PAGENO} of {nbpg}</td>
+
+        <td width="50%" class="text-right">Page {PAGENO} of {nbpg}</td>
+
     </tr>
+
 </table>
