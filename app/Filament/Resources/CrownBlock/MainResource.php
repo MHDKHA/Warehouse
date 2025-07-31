@@ -244,7 +244,7 @@ class MainResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => MainResource\Pages\ListMains::route('/'),
+            'index' => MainResource\Pages\ListMains::route('/{wo_id?}'),
             'create' => MainResource\Pages\CreateMain::route('/create/{wo_id?}'),
             'edit' => MainResource\Pages\EditMain::route('/{record}/edit'),
             'readings' => MainResource\Pages\ManageReadings::route('/{record}/readings'),
