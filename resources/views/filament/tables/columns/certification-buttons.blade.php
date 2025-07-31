@@ -8,7 +8,7 @@
         size="sm"
         tag="a"
         :href="$crownBlockExists
-            ? route('filament.app.resources.crown-block.mains.index')
+            ? route('filament.app.resources.crown-block.mains.index', ['wo_id' => $getRecord()->wo_id])
             : route('filament.app.resources.crown-block.mains.create', ['wo_id' => $getRecord()->wo_id])"
         target="_blank"
     >
@@ -20,7 +20,7 @@
         size="sm"
         tag="a"
         :href="$crownBlockExists
-            ? route('filament.app.resources.crown-block.mains.index')
+            ? route('filament.app.resources.crown-block.mains.index', ['wo_id' => $getRecord()->wo_id])
             : route('filament.app.resources.crown-block.mains.create', ['wo_id' => $getRecord()->wo_id])"
         target="_blank"
     >
@@ -32,7 +32,7 @@
         size="sm"
         tag="a"
         :href="$crownBlockExists
-            ? route('filament.app.resources.crown-block.mains.index')
+            ? route('filament.app.resources.crown-block.mains.index', ['wo_id' => $getRecord()->wo_id])
             : route('filament.app.resources.crown-block.mains.create', ['wo_id' => $getRecord()->wo_id])"
         target="_blank"
     >

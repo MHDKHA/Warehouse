@@ -53,7 +53,9 @@ class WorkOrderResource extends Resource
                     ->color(fn (WorkOrder $record) => Main::where('wo_id', $record->wo_id)->exists() ? 'success' : 'gray')
                     ->icon('heroicon-o-cube')
 //                    ->url(fn (WorkOrder $record) => CrownBlockResource::getUrl('create', ['wo_id' => $record->wo_id]))
-                    ->url(fn (WorkOrder $record) => $record->crownBlock()->exists() ? route('filament.app.resources.crown-block.mains.index') : route('filament.app.resources.crown-block.mains.create', ['wo_id' => $record->wo_id]))
+                    ->url(fn (WorkOrder $record) => $record->crownBlock()->exists()
+                        ? route('filament.app.resources.crown-block.mains.index', ['wo_id' => $record->wo_id])
+                        : route('filament.app.resources.crown-block.mains.create', ['wo_id' => $record->wo_id]))
                     ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
